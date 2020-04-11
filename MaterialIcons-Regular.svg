@@ -2371,3 +2371,14 @@ d="M0 0z" />
 d="M0 0z" />
   </font>
 </defs></svg>
+
+
+
+<style type="text/css">
+@font-face {
+  font-family: "Super Icons";
+  src: url(#MaterialIcons-Regular);
+}
+</style>
+
+<text font-family="Super Icons">My text uses Super Sans</text>
