@@ -16,6 +16,7 @@ program(
 [displayJSON]{
 
     for(var k in stack)
+ if(k!="JSON")
 	displayJSON+='['+k+'] {'+stack[k]+'}\\n';
 
 },
@@ -26,15 +27,15 @@ program(
 
 "once:"), program {
 
-  js.data = {};
-  js.JSON( js.program.inline, js.data );
+  js.data = {JSON:js.JSON};
+  js.JSON( js.program.inline );
   console.log( js.program.displayJSON(js.data) );
 	return '';
 }={
 
   js.program.infile = stack;
-  js.data = {};
-  js.JSON( loadFile(stack), js.data );
+  js.data = {JSON:js.JSON};
+  js.data.JSON( loadFile(stack) );
   console.log( js.program.displayJSON(js.data) );
 	return '';
 
@@ -61,4 +62,5 @@ program(
     console.log("usage :\n" + js.usage());
     return done;
 }},
+
 
