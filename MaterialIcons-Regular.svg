@@ -2370,10 +2370,7 @@ d="M0 0z" />
     <glyph glyph-name="0" unicode="0" 
 d="M0 0z" />
   </font>
-</defs></svg>
-
-
-
+</defs>
 <style type="text/css">
 @font-face {
   font-family: "Super Icons";
@@ -2382,3 +2379,8 @@ d="M0 0z" />
 </style>
 
 <text font-family="Super Icons">My text uses Super Sans</text>
+
+</svg>
+
+
+
