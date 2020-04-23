@@ -1,0 +1,6 @@
+cd Compile
+qjsc -o tmp.c -e ..\whole.js
+gcc -c tmp.c -o ..\whole.o
+gcc ..\whole.o -lquickjs -lpthreadGC2 -o ..\whole.exe
+copy pthreadGC2.dll ..
+cd ..
