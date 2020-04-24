@@ -1,0 +1,1 @@
+qjs whole.js program.js :: "{hello: {world:`${console.log('N0Th1N')}`}}"
