@@ -1,3 +1,5 @@
+# Whole JavaScript interpreter -- build instructions
+
 # Compile on windows
 cd Compile
 qjsc -o tmp.c -e ..\whole.js
