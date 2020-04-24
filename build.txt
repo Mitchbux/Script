@@ -1,6 +1,17 @@
+# Compile on windows
 cd Compile
 qjsc -o tmp.c -e ..\whole.js
 gcc -c tmp.c -o ..\whole.o
 gcc ..\whole.o -lquickjs -lpthreadGC2 -o ..\whole.exe
 copy pthreadGC2.dll ..
 cd ..
+
+# Compile on linux
+sudo apt-get install wget binutils gcc
+wget rawgithubusercontent.com/Mitchbux/Script/quickjs..version..tar
+tar -xf quickjs..version..tar
+cd quickjs..version..
+make all
+sudo make install
+cd ..
+qjsc whole.js -o whole

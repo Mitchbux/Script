@@ -1,3 +1,0 @@
-#!/bin/sh
-whole program.js :: "{json: 'string', number: 1337}"
-whole program.js file.json
