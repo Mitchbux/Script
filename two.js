@@ -1,9 +1,14 @@
-'script',
-hello world ('hello' 'world' [greet] {greet+='::'+this;},
-    {return this.greet();}
-),
+("script")
 
-{return this.join("") + js.hello.world; },
+hello world ( 'hello' 'world' 
+	[greet] { greet += '::' + this; },
+{ return this.greet(); }),
+
+# main stack
+{
+	return this.join("") 
+  + js.hello.world; 
+},
 
 
 

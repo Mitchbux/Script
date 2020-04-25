@@ -41,22 +41,22 @@ for(this.char++;this.char<this.text.length;this.char++){  if ((this.here+"")==b)
 name: "", root: "js", node: "js", exist:{}, rootStack:["js"]};
 Object.defineProperty(swon, "here", {get:function(){return this.text[this.char];}});
 
-var bwon= [function(){swon.rootStack.push(swon.root); swon.root = swon.node;  return "";}, function(){swon.root = swon.rootStack.pop(); return "";}, function(){swon.node = swon.root; return "";}
-, function(){var code = swon.until("{","}");code="function(stack){"+code+"}";if (swon.name=="="){return swon.node+".setter="+code+";";}else{return swon.node +".getter="+code+";"}}, function(){return "";}
-, function(){var idx = swon.until("", "]"); var skip = swon.until("","{"); var cde = swon.until("{","}"); return swon.node + ".indexer("+doubleq(idx) + "," + doubleq(cde.replace("\n", "\\n"))+");"; }, function(){return "";}
+var bwon= [function(){swon.rootStack.push(swon.root); swon.root = swon.node;  return "";}, function(){swon.root = swon.rootStack.pop(); return "";}, function(){swon.node = swon.root; swon.name = ""; return "";}
+, function(){var code = swon.until("{","}");code="function(stack){"+code+"}";return swon.node +".getter="+code+";"}, function(){return "";}
+, function(){var idx = swon.until("", "]"); var skip = swon.until("","{"); var cde = swon.until("{","}"); return swon.node + ".indexer("+doubleq(idx) + "," + "`" + cde +"`);"; }, function(){return "";}
 , function(){var result = swon.node +".cell="+swon.node+".plus();"; swon.node += ".cell"; return result;}, function(){swon.stack = "value"; return "";}
 , function(){var result = swon.node +".cell="+swon.node+".minus();"; swon.node += ".cell"; return result;}, function(){return "";}
-, function(){var data = quote(swon.until("", "'")); return swon.node + ".add(" + data + ");";}, function(){var data = doubleq(swon.until("", "\"")); return swon.node + ".add(" + data + ");";}];
+, function(){var data = "`" + swon.until("", "'") + "`"; return swon.node + ".add(" + data + ");";}, function(){var data = "`" +swon.until("", "\"")+ "`"; return swon.node + ".add(" + data + ");";}];
 bwon.token= "(),{}[]+=-*'\"#";bwon.breaker= "(),{}[]+=-*'\"# \t\r\n";
 bwon[-1] = function(){if (swon.stack=="")return ""; swon.name=swon.stack;if (swon.exist[swon.node + "." + swon.name] || swon.name=="module" || swon.name=="loader"){ swon.node += "."+swon.name; return ""; }else {swon.node += "."+swon.name; swon.exist[swon.node]={};return swon.node+"=[];";} };
 var comment = bwon.token.indexOf("#");var quote = function(str){return "'" + str +"'";};var doubleq = function(str){return "\"" + str +"\"";};bwon[comment] = function(){var skip=swon.until("", "\n"); return "";};
 
-Array.prototype.WON = function(wonstr){swon.text=wonstr; var result="";
+Array.prototype.WON = function(wonstr){swon.text=wonstr; var result=""; var ok="";
 for(swon.char=0;swon.char<swon.text.length;swon.char++){
   if (bwon.breaker.indexOf(swon.here)>-1){
-   if (swon.stack.length>0){result +=bwon[-1]();+"\n"}
-    swon.stack=""; result+=bwon[bwon.token.indexOf(swon.here)]();
-    }else swon.stack += swon.here;} eval(result);};
+   if (swon.stack.length>0){result+=bwon[-1](); }
+    swon.stack=""; result+=bwon[bwon.token.indexOf(swon.here)](); 
+    }else swon.stack += swon.here;}  eval(result) };
 
 //Parse Javascript Object Notatation
 Array.prototype.JSON = function(jsonstr, obj){if (!obj)obj=this; eval("var json="+jsonstr+"; for(var k in json)obj[k]=json[k];"); };

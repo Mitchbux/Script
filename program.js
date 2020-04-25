@@ -1,42 +1,37 @@
-# ::::/ program.js /::::
-# run : whole program.js
-# cc : whole.pkg program.js
+# ::::::::::::::::::::
+# Program.js ---------
+# Run with Whole - Compile with Whole.pkg
 
-('program :: "{json: `data`, list: [1,2,3]}"', 'program file.json')
-[usage]{usage+='    ' + this + '\\n';},
 
-program(
-	inline,
-	infile,
 
-# How to create indexer filters
-# the parameter can be found @ stack
-# the result is built with the value of the indexer
+program( cmdline, infile,
 
-[displayJSON]{
-
-    for(var k in stack)
- if(k!="JSON")
-	displayJSON+='['+k+'] {'+stack[k]+'}\\n';
-
+[displayJSON]
+{ 
+	for(var n in stack)
+	if (n!="read")
+	displayJSON+="["+n+"] "+JSON.stringify(stack[n])+"\\n";
 },
 
 # ----
 # program stack
 # ----
 
-"once:"), program {
+"once:"), program 
+{
 
-  js.data = {JSON:js.JSON};
-  js.JSON( js.program.inline );
-  console.log( js.program.displayJSON(js.data) );
+	js.config = {read:js.JSON};
+	js.config.read( js.program.cmdline );
+	console.log( js.program.displayJSON(js.config) );
+	
 	return '';
+	
 }={
-
-  js.program.infile = stack;
-  js.data = {JSON:js.JSON};
-  js.data.JSON( loadFile(stack) );
-  console.log( js.program.displayJSON(js.data) );
+	if (stack !=""){
+	js.program.infile = {};
+	js.JSON( loadFile(stack), js.program.infile );
+	console.log( js.program.displayJSON(js.program.infile) );
+	}
 	return '';
 
 } ,
@@ -48,19 +43,35 @@ program(
 
 {try { var done = "::/ done /::";
 
-   if (scriptArgs[2]=="::"){
-	js.program.inline = scriptArgs[3];
-	var execute = js.program.stack;
-	return done;
+   if (commandLine.first=="::"){
+		js.program.cmdline = commandLine.next;
+
+		// calling stack in execute mode
+		var execute = js.program.stack;
+		// ---
+		
    }else{
-	if (scriptArgs[2]=="" || scriptArgs.length<3) throw("::/ Missing Argument /::");
-	js.program.stack = scriptArgs[2];
-	return done;
+		if (commandLine.first=="" || commandLine.length<1) 
+			throw("Missing Arguments");
+		
+		// calling stack in a loop
+		for (var n in commandLine)
+			js.program.stack = commandLine[n];
+		// ---
+		
    }
  }catch(ex){
-    console.log(ex);
+    console.log("::Exception::" + ex);
     console.log("usage :\n" + js.usage());
-    return done;
-}},
+	
+}return done; },
 
+# -----
+# Usage 
+# -----
+
+(quote "'",
+  'program :: "{json: ${js.quote}string${js.quote}, list: [1,2,3]}"',
+  'program file.json' )
+[usage]{usage+="    " + this + "\\n";},
 

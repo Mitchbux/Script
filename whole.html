@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <style>
 body{color:#e0e0e0;background-color:#202020;}
-node{font-weight:bold;}
+node {font-weight:bold;color:#a0a0a0;}
 </style>
 <body>
 <script type="won">
-	'script',
-hello world ('hello' 'world' [greet] {greet+='::'+this;},
-    {return this.greet();}
-),
+("script")
 
-{return this.join("") + js.hello.world; },
+hello world ( 'hello' 'world' 
+	[greet] { greet += '::' + this; },
+{ return this.greet(); }),
+
+# main stack
+{
+	return this.join("") 
+  + js.hello.world; 
+}
 
 </script>
 <script type="won">
@@ -18,11 +23,14 @@ hello world ('hello' 'world' [greet] {greet+='::'+this;},
 
 module [xml] {<${name}>${code}</${name}>},
 
-# Create XML Nodes --
+# Create XML Node --
 root xml
-[head] {title}
-[node] {<br/> Generated html bold text} # comment/uncomment to see the result
-[unused] {nc},
+
+# comment/uncomment to see the result
+# generate any text effects changing 'node' style attributes
+[node] {<pre> Generated html bold text 
+<i> The second line of this text would be in italic. </i> </pre>} 
+
 
 
 # loader json example
@@ -58,8 +66,9 @@ Array.prototype.index = 0;
 Array.prototype.forEach = function(stack, body){for(var key=0;key<this.length;key++) body.apply(this[key], [stack]);}
 Array.prototype.add = Array.prototype.push;
 Object.defineProperty(Array.prototype,"first",{get: function(){return this[this.index=0];}, set: function(v){this[this.index=0] = v;}});
-Object.defineProperty(Array.prototype,"next",{get: function(){return this[this.index<this.length?++this.index:this.length];}, set: function(v){this[this.index<this.length?++this.index:this.length]=v;}});
-Object.defineProperty(Array.prototype, "theFirst",{get: function(){return (this.index==0);}});
+Object.defineProperty(Array.prototype,"next",{get: function(){return this[this.index<this.length?++this.index:0];}, set: function(v){if((++this.index)<this.length){this[this.index]=v;} else this.add(v);}});
+Object.defineProperty(Array.prototype,"last",{get: function(){return this[this.index=0];}, set: function(v){this[this.index=0] = v;}});
+Object.defineProperty(Array.prototype,"previous",{get: function(){return this[this.index>0?--this.index:this.length-1];}, set: function(v){if((--this.index)>0){this[this.index]=v;} else{ this.index=0; this.unshift(v); }}});
 
 Array.prototype.plus = function(){if (!this[-1]){this[-1] = [,[]];}else this.pus++;return this[this.mus][this.pus]=[];}
 Array.prototype.minus = function(){if (!this[-1]){this[-1] = [,[]];}else this.mus--; this.pus=0;return this[this.mus]=[];}
@@ -74,7 +83,7 @@ Object.defineProperty(Array.prototype,"stack",{get: function(){ return this.gett
 Array.prototype.module=function(name, stack){ eval(`Object.defineProperty(Array.prototype,name,  {get: function(){if (!this._${name})this._${name}=[];${stack} return this._${name};},set: function(stack){if (!this._${name})this._${name}=stack;}});`);};
 Array.prototype.module.indexer = function(name,code){this(name,"this._"+name+".indexer =function(name, code){this[name]=`"+code.replace("\\n", "\\\\n")+"`;};");};
 Array.prototype.loader=function(name, stack){ eval(`Object.defineProperty(Array.prototype,name,  {get: function(){if (!this._${name})this._${name}=[];${stack} return this._${name};},set: function(stack){if (!this._${name})this._${name}=stack;}});`);};
-Array.prototype.loader.indexer = function(name,stack){this(name, "this._"+name+".add = function(added){ this.push(`"+stack+"`); };");};
+Array.prototype.loader.indexer = function(name,stack){this(name, "this._"+name+".add = function(added){ this.push(`"+stack+"`); };this._"+name+".unshift = function(added){ this.unshift(`"+stack+"`); };");};
 
 //parse Wise Object Notation
 var swon = {text:"", char:0, stack:"", until:function(a,b){var level=0; var result = "";
@@ -82,22 +91,22 @@ for(this.char++;this.char<this.text.length;this.char++){  if ((this.here+"")==b)
 name: "", root: "js", node: "js", exist:{}, rootStack:["js"]};
 Object.defineProperty(swon, "here", {get:function(){return this.text[this.char];}});
 
-var bwon= [function(){swon.rootStack.push(swon.root); swon.root = swon.node;  return "";}, function(){swon.root = swon.rootStack.pop(); return "";}, function(){swon.node = swon.root; return "";}
-, function(){var code = swon.until("{","}");code="function(stack){"+code+"}";if (swon.name=="="){return swon.node+".setter="+code+";";}else{return swon.node +".getter="+code+";"}}, function(){return "";}
-, function(){var idx = swon.until("", "]"); var skip = swon.until("","{"); var cde = swon.until("{","}"); return swon.node + ".indexer("+doubleq(idx) + "," + doubleq(cde.replace("\n", "\\n"))+");"; }, function(){return "";}
+var bwon= [function(){swon.rootStack.push(swon.root); swon.root = swon.node;  return "";}, function(){swon.root = swon.rootStack.pop(); return "";}, function(){swon.node = swon.root; swon.name = ""; return "";}
+, function(){var code = swon.until("{","}");code="function(stack){"+code+"}";return swon.node +".getter="+code+";"}, function(){return "";}
+, function(){var q="`"; if ((swon.node.indexOf("module")>-1) || (swon.node.indexOf("loader")>-1)){q="'";} var idx = swon.until("", "]"); var skip = swon.until("","{"); var cde = swon.until("{","}"); return swon.node + ".indexer("+doubleq(idx) + "," + q + cde + q + ");"; }, function(){return "";}
 , function(){var result = swon.node +".cell="+swon.node+".plus();"; swon.node += ".cell"; return result;}, function(){swon.stack = "value"; return "";}
 , function(){var result = swon.node +".cell="+swon.node+".minus();"; swon.node += ".cell"; return result;}, function(){return "";}
-, function(){var data = quote(swon.until("", "'")); return swon.node + ".add(" + data + ");";}, function(){var data = doubleq(swon.until("", "\"")); return swon.node + ".add(" + data + ");";}];
+, function(){var data = "`" + swon.until("", "'") + "`"; return swon.node + ".add(" + data + ");";}, function(){var data = "`" +swon.until("", "\"")+ "`"; return swon.node + ".add(" + data + ");";}];
 bwon.token= "(),{}[]+=-*'\"#";bwon.breaker= "(),{}[]+=-*'\"# \t\r\n";
 bwon[-1] = function(){if (swon.stack=="")return ""; swon.name=swon.stack;if (swon.exist[swon.node + "." + swon.name] || swon.name=="module" || swon.name=="loader"){ swon.node += "."+swon.name; return ""; }else {swon.node += "."+swon.name; swon.exist[swon.node]={};return swon.node+"=[];";} };
 var comment = bwon.token.indexOf("#");var quote = function(str){return "'" + str +"'";};var doubleq = function(str){return "\"" + str +"\"";};bwon[comment] = function(){var skip=swon.until("", "\n"); return "";};
 
-Array.prototype.WON = function(wonstr){swon.text=wonstr; var result="";
+Array.prototype.WON = function(wonstr){swon.text=wonstr; var result=""; var ok="";
 for(swon.char=0;swon.char<swon.text.length;swon.char++){
   if (bwon.breaker.indexOf(swon.here)>-1){
-   if (swon.stack.length>0){result +=bwon[-1]();+"\n"}
-    swon.stack=""; result+="\n"+bwon[bwon.token.indexOf(swon.here)]();
-    }else swon.stack += swon.here;} eval(result);};
+   if (swon.stack.length>0){result+=bwon[-1](); }
+    swon.stack=""; result+=bwon[bwon.token.indexOf(swon.here)](); 
+    }else swon.stack += swon.here;}  eval(result) };
 
 //Parse Javascript Object Notatation
 Array.prototype.JSON = function(jsonstr, obj){if (!obj)obj=this; eval("var json="+jsonstr+"; for(var k in json)obj[k]=json[k];"); };
@@ -107,17 +116,10 @@ String.prototype.after =function (a){var s=this; if (s.indexOf(a)>-1)return s.su
 String.prototype.before = function (b){var s=this; if (s.indexOf(b)>-1) return s.substring(0,s.indexOf(b));else return empty;}
 String.prototype.replace = function(a,b){return this.split(a).join(b);}
 
-js.module("load",
-  "this._load.add = function(filename){this.push( loadFile(filename) );};"
-);
+js.loader.indexer("load", "loadFile(added);");
+js.module("write","this._write.to = this._write.indexer = function(name, code){ writeFile(name, code);};");
+js.module("str","this._str.indexer =function(name, code){this[name]=code;};");
 
-js.module("write",
-  "this._write.to = this._write.indexer = function(name, code){ writeFile(name, code);};"
-);
-
-js.module("str",
-  "this._str.indexer =function(name, code){this[name]=code;};"
-);
 var done="<br/>";
 var scripts=document.getElementsByTagName("script");
 for(var n in scripts)if (scripts[n].type=="won"){

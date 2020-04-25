@@ -777,5 +777,7 @@ int main(int argc, char **argv)
   js_std_loop(ctx);
   JS_FreeContext(ctx);
   JS_FreeRuntime(rt);
+  
+  system("pause");
   return 0;
 }
