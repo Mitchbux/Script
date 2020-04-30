@@ -7,3 +7,4 @@ gcc -c tmp.c -o ..\whole.o
 echo ::[3/4]::
 gcc ..\whole.o -lquickjs -lpthread -Bstatic -Bdynamic -o ..\whole.exe
 echo ::/ Done /::
+cd ..
