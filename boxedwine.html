@@ -42,14 +42,15 @@ body{color:#e0e0e0;background-color:#202020;font-family: "dft";font-size:30px;}
           &nbsp;&nbsp;&nbsp;
           <input type="checkbox" id="resize">Resize canvas
           <input type="button" value="Fullscreen" onclick="Module.requestFullScreen(document.getElementById('pointerLock').checked, document.getElementById('resize').checked)">
-        </div>
+       <a href="#" id='dlbtn'>click to download when ready</a>
+    </div>
         <div id="dropzone">
             <div class="emscripten_border">
                 <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
             </div>
         </div>
         <div>
-            <textarea class="emscripten" id="output" rows="8" style="display: none"></textarea>
+            <textarea class="emscripten" id="output" rows="18" style="display: none"></textarea>
         </div>
         <div id="openModal" class="modalDialog">
             <div> <a href="#close" title="Close" class="close" onclick="done();">X</a>
@@ -91,6 +92,19 @@ body{color:#e0e0e0;background-color:#202020;font-family: "dft";font-size:30px;}
             script.src = "boxedwine.js";
             document.body.appendChild(script);
         }
+        
+        document.getElementById('dlbtn').onclick= function(event){
+        	alert(files);try{
+var contents = FS.readFile(Config.dirPrefix+"/whole.exe",   { encoding: 'binary' });
+ 
+    blob = new Blob([contents], {type: "octet/stream"}),
+    url = window.URL.createObjectURL(blob);
+  	this.href = url;
+    this.target = '_blank';
+  	// target filename
+        this.download="whole-app.exe";}catch(ex){alert(ex.toString());}
+}
+
         </script>
 <script async type="text/javascript" src="boxedwine.js"></script>
   </body>
