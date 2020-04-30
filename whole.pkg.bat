@@ -1,4 +1,5 @@
 @echo off
+@echo don't forget to rename /lib/libpthreadGC2.a to libpthread.a
 cd Compile
 echo ::[1/4]::
 qjsc -o tmp.c -e ..\whole.js
