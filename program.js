@@ -4,21 +4,19 @@
 
 
 
-program( cmdline, infile,
+program
+( 
+	cmdline, 
+	infile,
+	":program"
+)
 
 [displayJSON]
 { 
-	for(var n in stack)
-	if (n!="read")
-	displayJSON+="js ["+n+"] "+JSON.stringify(stack[n])+"\\n";
-},
-
-# ----
-# program stack
-# ----
-
-"once:"), program 
-{
+	for(var n in stack) if (n!="read")
+		displayJSON += "js ["+n+"] " + JSON.stringify( stack[n] ) + "\\n";
+	
+} ,  program {
 
 	js.config = {read:js.JSON};
 	js.config.read( js.program.cmdline );
@@ -26,24 +24,22 @@ program( cmdline, infile,
 	
 	return '';
 	
-}={
-	if (stack !=""){
-	js.program.infile = {};
-	js.JSON( loadFile(stack), js.program.infile );
-	console.log( js.program.displayJSON(js.program.infile) );
+} = 	{ if (stack != "") {
+	
+		js.program.infile = {};
+		js.JSON( loadFile(stack), js.program.infile );
+		console.log( js.program.displayJSON(js.program.infile) );    	
 	}
-	return '';
+	
+   return '';
 
-} ,
-
-# -----
-# main stack loop
-# takes argument and run the stack
-# -----
-
-{try { var done = "::/ done /::";
+} , {
+	
+try { 
+	var done = "::/ done /::";
 
    if (commandLine.first=="::"){
+	
 		js.program.cmdline = commandLine.next;
 
 		// calling stack in execute mode
@@ -61,17 +57,19 @@ program( cmdline, infile,
 		
    }
  }catch(ex){
+	 
     console.log("::Exception::" + ex);
     console.log("usage :\n" + js.str.usage);
 	
-}return done; },
+ }
 
-# -----
-# Usage 
-# -----
+//finally
+return done; 
 
-str [usage]{
+}, str [usage]	{
+	
   program :: "{json: 'string', list: [1,2,3]}",
   program file.json 
+	
 },
 
