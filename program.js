@@ -10,7 +10,7 @@ program( cmdline, infile,
 { 
 	for(var n in stack)
 	if (n!="read")
-	displayJSON+="["+n+"] "+JSON.stringify(stack[n])+"\\n";
+	displayJSON+="js ["+n+"] "+JSON.stringify(stack[n])+"\\n";
 },
 
 # ----
@@ -62,7 +62,7 @@ program( cmdline, infile,
    }
  }catch(ex){
     console.log("::Exception::" + ex);
-    console.log("usage :\n" + js.usage());
+    console.log("usage :\n" + js.str.usage);
 	
 }return done; },
 
@@ -70,8 +70,8 @@ program( cmdline, infile,
 # Usage 
 # -----
 
-(quote "'",
-  'program :: "{json: ${js.quote}string${js.quote}, list: [1,2,3]}"',
-  'program file.json' )
-[usage]{usage+="    " + this + "\\n";},
+str [usage]{
+  program :: "{json: 'string', list: [1,2,3]}",
+  program file.json 
+},
 

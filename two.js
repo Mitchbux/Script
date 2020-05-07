@@ -1,14 +1,13 @@
 ("script")
 
-hello world ( 'hello' 'world' 
-	[greet] { greet += '::' + this; },
-{ return this.greet(); }),
+js [hello] {say:{hello:"world"}},
 
-# main stack
 {
-	return this.join("") 
-  + js.hello.world; 
-},
+	for(var v in js.hello)
+		console.log(v + ' => ' + JSON.stringify(js.hello[v]));
+	return this.join("") + " end.";
+}
+
 
 
 
