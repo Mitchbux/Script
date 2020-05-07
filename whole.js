@@ -43,7 +43,7 @@ Object.defineProperty(swon, "here", {get:function(){return this.text[this.char];
 
 var bwon= [function(){swon.rootStack.push(swon.root); swon.root = swon.node;  return "";}, function(){swon.root = swon.rootStack.pop(); return "";}, function(){swon.node = swon.root; swon.name = ""; return "";}
 , function(){var code = swon.until("{","}");code="function(stack){"+code+"}";return swon.node +".getter="+code+";"}, function(){return "";}
-, function(){var idx = swon.until("", "]"); var skip = swon.until("","{"); var cde = swon.until("{","}"); return swon.node + ".indexer("+doubleq(idx) + "," + "`" + cde +"`);"; }, function(){return "";}
+, function(){var q="`"; if ((swon.node.indexOf("module")>-1) || (swon.node.indexOf("loader")>-1)){q="'";} var idx = swon.until("", "]"); var skip = swon.until("","{"); var cde = swon.until("{","}"); return swon.node + ".indexer("+doubleq(idx) + "," + q + cde + q + ");"; }, function(){return "";}
 , function(){var result = swon.node +".cell="+swon.node+".plus();"; swon.node += ".cell"; return result;}, function(){swon.stack = "value"; return "";}
 , function(){var result = swon.node +".cell="+swon.node+".minus();"; swon.node += ".cell"; return result;}, function(){return "";}
 , function(){var data = "`" + swon.until("", "'") + "`"; return swon.node + ".add(" + data + ");";}, function(){var data = "`" +swon.until("", "\"")+ "`"; return swon.node + ".add(" + data + ");";}];
@@ -69,7 +69,7 @@ String.prototype.replace = function(a,b){return this.split(a).join(b);}
 js.loader.indexer("load", "loadFile(added);");
 js.module("write","this._write.to = this._write.indexer = function(name, code){ writeFile(name, code);};");
 js.module("str","this._str.indexer =function(name, code){this[name]=code;};");
-js.module("html","this._html.indexer = function(name, code){this[name]=code;};this._html.getter = function(){return `<!DOCTYPE html><style>${(this['css'] ? this.css : '')}</style><body><canvas/>${(this['body'] ? this.body : '') }</body><script>${( this['script'] ? this.script : '')}</script>\n`;};");
+js.module("js","this._js.indexer =function(name, code){js.JSON('{'+code+'}',js[name]={});};");
 
 //var scriptArgs = process.argv.slice(1);
 
