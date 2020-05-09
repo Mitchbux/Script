@@ -327,11 +327,11 @@ str [usage] {
 	
 	  >> [TODO] Retrieve posts from 'MyCloud' where price < '1000' [/TODO]
 
-	czw :API: "MyCloud connect 'user' 'token', MyCloud api post( [reload] {id '1'},	[update] {location 'seatle'} )" (TODO)
-	czw :WQL: "MyCloud.session('user' 'token') MyCloud.post where(id='1') location 'seatle'" (TODO)
-	czw :SQL: "connect MyCloud; user 'user'; update post.location from post where post.id='1' values ('seatle');" (TODO)
+	czw :API: "MyCloud connect 'user' 'token', MyCloud api post( [reload] {id '1'},	[update] {location 'seattle'} )" (TODO)
+	czw :WQL: "MyCloud.session('user' 'token') MyCloud.post where(id='1') location 'seattle'" (TODO)
+	czw :SQL: "connect MyCloud; user 'user'; update post.location from post where post.id='1' values ('seattle');" (TODO)
 	
-	  >> [TODO] Update post ['1'] from 'MyCloud' to modify location according to 'seatle'
+	  >> [TODO] Update post ['1'] from 'MyCloud' to modify location according to 'seattle'
 
 }
 
