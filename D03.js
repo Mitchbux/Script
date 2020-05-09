@@ -24,9 +24,15 @@ screen [script] { document.write("Javascript generated."); }
 screen [pixel] 
 {
 	if (timecode < timecode("00:00:30"))	
+		
+		//# The HTML Page from 'mypage' loader is displayed half a minute
 		pixel = mypage.still + image.background_jpg; }
 	else {
+		
+		//# The HTML Page from the screen module is displayed the other half minute
 		pixel = html + image.background_jpg; 
+		
+		//# To reset the timer after One Minute
 		if (timecode > timecode(":01")
 			timecode = timecode(":00");
 	}
