@@ -71,6 +71,7 @@ js.module("write","this._write.to = this._write.indexer = function(name, code){ 
 js.module("str","this._str.indexer =function(name, code){this[name]=code;};");
 js.module("js","this._js.indexer =function(name, code){js.JSON('{'+code+'}',js[name]={});};");
 
+//# uncomment for Node JS
 //var scriptArgs = process.argv.slice(1);
 
 var commandLine = scriptArgs.slice(2);
