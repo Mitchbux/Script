@@ -53,6 +53,6 @@ screen [pixel]
 	file(this).toZIP("decoded.zip");
 	
 	//or use WQLite database storage
-	wqlite.files(this).addTo("decoded.czw");	
+	wqlite.files(this).addTo("create Post content file 'decoded.czw'");	
 	
 }
