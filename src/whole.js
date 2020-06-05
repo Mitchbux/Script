@@ -1,15 +1,7 @@
-//# import based on bellard.org/quickjs -- comment for Node JS
-import {loadFile} from "std"
-import {open} from "std"
-var writeFile = function(filename,content){var file=open(filename,"w");file.puts(content);file.close();};
+//# comment for nodeJS
+import * as std from "std";
+import * as os from "os";
 
-//# uncomment for Node JS
-//var fs = require('fs');
-//var loadFile = function(filename){return fs.readFileSync(filename, "utf8");};
-//var writeFile = function(filename,content){return fs.writeFileSync(filename,content,"utf8");};
-
-//globals
-var js=[];
 
 //Array extension
 Array.prototype.index = 0;
@@ -66,14 +58,15 @@ String.prototype.after =function (a){var s=this; if (s.indexOf(a)>-1)return s.su
 String.prototype.before = function (b){var s=this; if (s.indexOf(b)>-1) return s.substring(0,s.indexOf(b));else return empty;}
 String.prototype.replace = function(a,b){return this.split(a).join(b);}
 
+//globals
+
+var js=[];
+
 js.loader.indexer("load", "loadFile(added);");
 js.module("write","this._write.to = this._write.indexer = function(name, code){ writeFile(name, code);};");
 js.module("str","this._str.indexer =function(name, code){this[name]=code;};");
 js.module("js","this._js.indexer =function(name, code){js.JSON('{'+code+'}',js[name]={});};");
 
-//var scriptArgs = process.argv.slice(1);
-
-var commandLine = scriptArgs.slice(2);
-
-js.WON(loadFile(scriptArgs[1]));
-console.log(js.toString());
+export function getRoot(){
+    return js;
+}
